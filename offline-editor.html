@@ -1,1 +1,331 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1115">
+  <title>Editor — Web Playground</title>
+  <style data-bundled-from="style.css">
+:root{color-scheme:dark;--bg:#090e12;--surface:#0e151a;--surface-2:#111b21;--surface-3:#162229;--line:#1c2a31;--line-soft:#17232a;--text:#e6f0f2;--muted:#7f9299;--dim:#53666e;--teal:#35e0cf;--teal-2:#12bcae;--teal-soft:rgba(53,224,207,.11);--mono:"DM Mono",monospace;--sans:"Inter",sans-serif}*{box-sizing:border-box}html,body{height:100%;margin:0;overflow:hidden;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:13px}button,a{font:inherit;color:inherit}button{border:0;cursor:pointer}.app-shell{height:100vh;min-width:920px;display:flex;flex-direction:column;background:radial-gradient(ellipse at 70% 0%,rgba(22,104,102,.08),transparent 38%),var(--bg)}.topbar{height:64px;flex:none;display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--line);background:rgba(12,18,22,.96);gap:18px}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;min-width:164px}.brand-mark{width:30px;height:30px;display:grid;grid-template-columns:1fr 1fr;gap:2px;transform:rotate(45deg);padding:4px;border:1px solid var(--teal);border-radius:8px;box-shadow:0 0 18px rgba(53,224,207,.12)}.brand-mark span{background:var(--teal);border-radius:2px;opacity:.9}.brand-mark span:nth-child(2){opacity:.38}.brand-mark span:nth-child(3){grid-column:1/3;opacity:.62}.brand-copy{display:flex;flex-direction:column;gap:1px}.brand-copy strong{font-size:18px;letter-spacing:-.8px;font-weight:800}.brand-dot,.logo-period{color:var(--teal)}.brand-copy small{font-size:8px;letter-spacing:1.7px;color:var(--muted);font-weight:600}.topbar-divider{height:28px;width:1px;background:var(--line)}.project-label{display:flex;align-items:center;gap:10px;color:#c4d1d4;font-size:12px}.folder-glyph{color:var(--teal);font-size:16px}.chevron{color:var(--muted);font-size:16px;margin-left:3px}.top-actions{display:flex;align-items:center;gap:7px;margin-left:auto}.tool-button,.icon-button{background:transparent;color:var(--muted);border-radius:6px;min-width:28px;height:28px;font-size:17px;display:inline-flex;align-items:center;justify-content:center;transition:.18s}.tool-button:hover,.icon-button:hover{background:var(--surface-3);color:var(--text)}.action-separator{height:20px;width:1px;background:var(--line);margin:0 6px}.button{height:33px;padding:0 12px;border-radius:6px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:7px;transition:.18s}.button-quiet{background:var(--surface-2);border:1px solid var(--line);color:#b7c6ca}.button-quiet:hover{border-color:#36535a;background:#142229}.button-primary{background:var(--teal);color:#06201f;padding:0 16px;box-shadow:0 0 18px rgba(53,224,207,.13);font-weight:800}.button-primary:hover{background:#65f0e2;transform:translateY(-1px)}.button-icon{font-size:15px}.topbar-right{display:flex;align-items:center;gap:16px;margin-left:10px}.save-state{color:var(--muted);font-size:10px;white-space:nowrap;display:flex;align-items:center;gap:7px}.save-state i,.status-dot,.preview-live-dot,.connection-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 9px rgba(53,224,207,.6);display:inline-block}.avatar{height:28px;width:28px;border-radius:50%;background:#183c3d;color:#7df6e9;border:1px solid #28615d;font-weight:700;font-size:11px}.workspace{min-height:0;flex:1;display:flex}.activity-rail{width:48px;flex:none;background:#0b1115;border-right:1px solid var(--line-soft);display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px}.rail-button{width:34px;height:36px;border-radius:7px;background:transparent;color:#71858c;display:grid;place-items:center;position:relative}.rail-button:hover{background:var(--surface-2);color:#d9e5e7}.rail-button.active{background:var(--teal-soft);color:var(--teal)}.rail-button.active:before{content:"";position:absolute;left:-7px;top:7px;bottom:7px;width:2px;background:var(--teal);border-radius:2px}.rail-icon{font-size:19px}.rail-spacer{flex:1}.file-sidebar{width:218px;flex:none;background:#0d1419;border-right:1px solid var(--line);display:flex;flex-direction:column;min-width:170px}.sidebar-heading{height:46px;padding:0 15px;display:flex;align-items:center;justify-content:space-between;color:#91a3a9;font-size:10px;font-weight:700;letter-spacing:1.2px}.project-tree-heading{height:35px;padding:0 12px;display:flex;align-items:center;gap:8px;color:#c9d5d8;font-size:10px;letter-spacing:.5px}.tree-caret{color:#82969c;font-size:14px}.folder-icon{color:var(--teal);font-size:14px}.project-tree-heading strong{font-size:9px;letter-spacing:1px}.tree-more{margin-left:auto}.file-tree{padding:5px 8px}.file-row,.tree-folder{width:100%;height:34px;display:flex;align-items:center;gap:9px;padding:0 10px;background:transparent;color:#a5b5ba;text-align:left;border-radius:5px;font-size:11px}.file-row:hover,.tree-folder:hover{background:#131f25;color:#e5eff0}.file-row.selected{background:rgba(53,224,207,.09);color:#e5ffff;box-shadow:inset 2px 0 var(--teal)}.file-type{width:16px;height:16px;display:inline-grid;place-items:center;font-family:var(--mono);font-size:11px;font-weight:500;border-radius:3px}.file-type.html{color:#ff956e;background:rgba(255,149,110,.12)}.file-type.css{color:#69aaff;background:rgba(105,170,255,.12);font-weight:700}.file-type.js{font-size:8px;color:#f0ce62;background:rgba(240,206,98,.12)}.file-dot{margin-left:auto;width:5px;height:5px;border-radius:50%;background:var(--teal)}.tree-divider{height:1px;background:var(--line-soft);margin:10px 7px}.tree-folder{height:32px;color:#788c93}.folder-icon.muted{color:#60747b}.sidebar-bottom{margin-top:auto;padding:13px 11px 15px;border-top:1px solid var(--line-soft)}.sidebar-bottom-title{font-size:9px;letter-spacing:1.1px;color:#657980;margin:0 0 10px 4px;font-weight:700}.workspace-card{display:flex;align-items:center;gap:9px;padding:10px 8px;background:#111d23;border:1px solid #1d3037;border-radius:7px}.workspace-card-icon{width:27px;height:27px;display:grid;place-items:center;border-radius:6px;background:#193d3c;color:var(--teal);font-size:15px}.workspace-card div{display:flex;flex-direction:column;gap:4px;min-width:0}.workspace-card strong{font-size:10px;font-weight:600}.workspace-card small{font-size:9px;color:var(--muted)}.status-pulse{margin-left:auto;width:6px;height:6px;border-radius:50%;background:var(--teal)}.main-area{min-width:0;flex:1;display:flex;flex-direction:column;padding:10px 11px 0;gap:0}.editor-preview-row{min-height:0;flex:1;display:flex;gap:0}.editor-pane,.preview-pane{min-width:0;min-height:0;display:flex;flex-direction:column;background:#0d151a;border:1px solid var(--line);border-radius:8px;overflow:hidden}.editor-pane{flex:0 0 47%}.preview-pane{flex:1}.resize-handle{flex:none;display:flex;align-items:center;justify-content:center;z-index:2}.vertical-handle{width:9px;cursor:col-resize}.vertical-handle span{height:34px;width:3px;border-radius:3px;background:#263941;opacity:.8}.vertical-handle:hover span,.horizontal-handle:hover span{background:var(--teal)}.tabbar{height:42px;flex:none;display:flex;align-items:stretch;justify-content:space-between;border-bottom:1px solid var(--line);background:#10191f}.editor-tabs{display:flex;min-width:0}.editor-tab{padding:0 12px;display:flex;align-items:center;gap:8px;background:transparent;color:#80939a;border-right:1px solid var(--line-soft);font-size:10px;white-space:nowrap;position:relative}.editor-tab.active{background:#142128;color:#e5f4f4}.editor-tab.active:after{content:"";height:2px;position:absolute;bottom:0;left:0;right:0;background:var(--teal)}.tab-close{color:#62767d;margin-left:4px;font-size:15px}.tabbar-tools{display:flex;align-items:center;padding:0 7px;gap:4px}.editor-toolbar{height:34px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 14px;border-bottom:1px solid var(--line-soft);color:#687c83;font-size:10px}.breadcrumbs{display:flex;align-items:center;gap:8px}.breadcrumbs b{font-weight:400;color:#42565e}.breadcrumbs strong{color:#c4d1d4;font-weight:500}.editor-tools{display:flex;align-items:center;gap:7px}.editor-tools>span{font-size:9px;color:#70858c}.code-area{min-height:0;flex:1;display:flex;overflow:auto;padding:14px 0 12px;background:linear-gradient(90deg,#0c1318 0,#0c1318 47px,#0e171d 47px,#0e171d 100%);font-family:var(--mono);font-size:11px;line-height:1.9;tab-size:2}.line-numbers{flex:none;width:47px;padding:0 12px 0 0;text-align:right;color:#43565e;user-select:none}.code-content{margin:0;padding:0 18px 0 12px;color:#c0d0d3;white-space:pre;min-width:max-content}.token-muted{color:#657980}.token-tag{color:#55d6c9}.token-attr{color:#a6c9ff}.token-string{color:#d5b77c}.editor-status{height:24px;flex:none;border-top:1px solid var(--line);display:flex;align-items:center;gap:15px;padding:0 11px;color:#71858c;font-family:var(--mono);font-size:9px}.editor-status span:first-child{margin-right:auto;color:#b1c4c8}.editor-status .status-dot{width:5px;height:5px;margin-right:5px}.preview-header{height:42px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 13px;border-bottom:1px solid var(--line);background:#10191f}.preview-title{display:flex;align-items:center;gap:8px;font-size:9px;letter-spacing:1px;color:#d8e7e8}.preview-title strong{font-weight:700}.live-pill{font-size:8px;letter-spacing:.5px;color:var(--teal);background:var(--teal-soft);padding:3px 5px;border-radius:3px}.preview-actions{display:flex;align-items:center;gap:5px}.preview-device{width:25px;height:25px;border-radius:5px;background:transparent;color:#72878e;font-size:13px}.preview-device.active,.preview-device:hover{background:var(--teal-soft);color:var(--teal)}.preview-address{height:34px;flex:none;margin:9px 10px 8px;padding:0 10px;display:flex;align-items:center;gap:8px;border:1px solid #21343b;border-radius:5px;background:#0a1115;color:#8da1a7;font-family:var(--mono);font-size:10px}.lock-icon{color:var(--teal)}.address-spacer{flex:1}.address-route{color:#d1dddd}.preview-canvas{flex:1;min-height:0;margin:0 9px 8px;border:1px solid #1b3037;border-radius:5px;overflow:hidden;background:#101c21;display:flex;justify-content:center}.site-preview{position:relative;width:100%;height:100%;min-height:340px;overflow:hidden;background:radial-gradient(ellipse at 75% 53%,rgba(25,130,120,.18),transparent 35%),linear-gradient(135deg,#102329 0%,#0d191e 48%,#0b1419 100%);display:flex;flex-direction:column;padding:0 7.5%;color:#e9f1ed}.site-preview:before{content:"";position:absolute;width:460px;height:460px;border:1px solid rgba(69,207,189,.15);border-radius:50%;right:-90px;top:95px;box-shadow:0 0 0 35px rgba(69,207,189,.025),0 0 0 80px rgba(69,207,189,.018),inset 0 0 80px rgba(69,207,189,.04)}.site-nav{height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(151,197,189,.12);position:relative;z-index:1}.site-logo{font-size:14px;font-weight:800;letter-spacing:-.6px;display:flex;align-items:center}.logo-symbol{font-size:21px;color:var(--teal);margin-right:7px}.site-nav-links{display:flex;gap:24px;font-size:9px;color:#a5b8b4}.site-contact{border:1px solid rgba(65,220,201,.5);background:rgba(53,224,207,.06);border-radius:4px;padding:8px 11px;color:#b9f5eb;font-size:9px}.site-contact span{margin-left:7px;color:var(--teal)}.site-hero{position:relative;z-index:1;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;padding:10px 0 25px}.hero-eyebrow{font-size:8px;letter-spacing:2px;color:#7caaa4;display:flex;align-items:center;gap:8px}.hero-eyebrow>span:first-child{width:5px;height:5px;background:var(--teal);border-radius:50%;box-shadow:0 0 10px var(--teal)}.eyebrow-line{width:32px;height:1px;background:#39766e}.site-hero h1{font-size:clamp(34px,4.4vw,62px);line-height:1.05;letter-spacing:-3px;margin:22px 0 16px;font-weight:700;position:relative;z-index:2}.site-hero h1 em{font-style:normal;color:var(--teal);text-shadow:0 0 35px rgba(53,224,207,.15)}.site-hero p{font-size:11px;line-height:1.9;color:#a2b6b2;margin:0 0 22px;position:relative;z-index:2}.hero-cta{padding:11px 14px;border-radius:4px;background:var(--teal);color:#06201e;font-size:9px;font-weight:800;position:relative;z-index:2}.hero-cta span{margin-left:12px;font-size:13px}.hero-orbit{position:absolute;border:1px solid rgba(53,224,207,.14);border-radius:50%;pointer-events:none}.orbit-one{width:330px;height:330px;right:2%;top:15%;transform:rotate(-25deg) scaleY(.54)}.orbit-two{width:245px;height:245px;right:12%;top:24%;transform:rotate(40deg) scaleY(.65);border-color:rgba(53,224,207,.1)}.hero-glow{position:absolute;width:210px;height:210px;right:11%;top:28%;background:rgba(28,170,154,.08);filter:blur(55px);border-radius:50%}.hero-index{position:absolute;right:0;bottom:24px;font-family:var(--mono);font-size:9px;color:#71918b}.hero-index span{color:var(--teal);margin:0 5px}.site-footer{height:37px;flex:none;border-top:1px solid rgba(151,197,189,.12);display:flex;align-items:center;justify-content:space-between;color:#65817b;font-size:7px;letter-spacing:1px;position:relative;z-index:1}.preview-footer{height:23px;flex:none;display:flex;align-items:center;gap:15px;padding:0 12px;color:#71858c;font-size:9px}.preview-footer span:first-child{margin-right:auto}.preview-footer .status-dot{width:5px;height:5px;margin-right:5px}.horizontal-handle{height:9px;cursor:row-resize}.horizontal-handle span{height:3px;width:36px;border-radius:3px;background:#263941}.bottom-panel{height:154px;flex:none;border:1px solid var(--line);border-radius:8px 8px 0 0;background:#0d151a;display:flex;flex-direction:column;overflow:hidden}.panel-header{height:38px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:#10191f;padding:0 8px}.panel-tabs{height:100%;display:flex;align-items:stretch;gap:3px}.panel-tab{padding:0 12px;background:transparent;color:#82969d;font-size:10px;display:flex;align-items:center;gap:7px;position:relative}.panel-tab.active{color:#e1f4f1}.panel-tab.active:after{content:"";height:2px;background:var(--teal);position:absolute;bottom:0;left:8px;right:8px}.panel-tab-icon{font-family:var(--mono);font-size:12px;color:var(--teal)}.panel-count,.problem-count{font-size:8px;color:#71858b;background:#1a292f;padding:2px 5px;border-radius:8px}.problem-count{color:#c6a36b}.panel-controls{display:flex;align-items:center;gap:5px}.panel-content{min-height:0;flex:1;padding:11px 14px;font-family:var(--mono);font-size:10px;color:#a9babe;overflow:auto}.console-line{display:flex;align-items:center;gap:12px;height:21px}.console-time{color:#536970}.console-info{color:#76b7d5;font-weight:500}.console-success{color:var(--teal)}.console-cursor{height:16px;margin:6px 0 0 92px}.console-cursor span{display:inline-block;height:12px;width:6px;background:var(--teal);opacity:.8;animation:blink 1.2s steps(2,start) infinite}@keyframes blink{to{visibility:hidden}}.app-statusbar{height:23px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:#10191e;border-top:1px solid var(--line);color:#7f9298;font-size:9px}.status-left,.status-right{display:flex;align-items:center;gap:13px}.connection-dot{width:6px;height:6px}.status-divider{height:11px;width:1px;background:#2a3b41}.status-brand{letter-spacing:1px;font-size:8px;color:#61767c}.status-brand b{color:var(--teal);font-size:12px;margin-left:4px}.file-sidebar.is-hidden{display:none}.bottom-panel.is-collapsed{height:38px}.bottom-panel.is-collapsed .panel-content{display:none}.main-area.sidebar-collapsed{padding-left:11px}.editor-preview-row.preview-hidden .preview-pane,.editor-preview-row.preview-hidden .vertical-handle{display:none}.editor-preview-row.preview-hidden .editor-pane{flex:1}.panel-content[data-panel="problems"] .console-line:first-child{color:#c5a56f}@media(max-width:1150px){.file-sidebar{width:185px}.editor-pane{flex-basis:44%}.site-nav-links{gap:13px}.site-hero h1{font-size:clamp(30px,4vw,48px)}.save-state{display:none}}@media(max-height:720px){.bottom-panel{height:125px}.site-nav{height:52px}.site-footer{height:29px}.site-hero h1{margin:14px 0 10px}.site-hero p{margin-bottom:14px}}
+</style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Editor home">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span class="brand-copy"><strong>editor<span class="brand-dot">.</span></strong><small>WEB PLAYGROUND</small></span>
+      </a>
+      <div class="topbar-divider"></div>
+      <div class="project-label"><span class="folder-glyph">▰</span><span>Untitled Project</span><span class="chevron">⌄</span></div>
+      <div class="top-actions">
+        <button class="tool-button" title="Undo"><span>↶</span></button>
+        <button class="tool-button" title="Redo"><span>↷</span></button>
+        <span class="action-separator"></span>
+        <button class="button button-quiet"><span class="button-icon">＋</span> New</button>
+        <button class="button button-quiet"><span class="button-icon">↥</span> Import</button>
+        <button class="button button-primary"><span class="button-icon">▶</span> Run</button>
+      </div>
+      <div class="topbar-right">
+        <span class="save-state"><i></i> All changes saved</span>
+        <button class="avatar" aria-label="User profile">A</button>
+      </div>
+    </header>
 
+    <div class="workspace">
+      <aside class="activity-rail">
+        <button class="rail-button active" title="Explorer"><span class="rail-icon">▤</span></button>
+        <button class="rail-button" title="Search"><span class="rail-icon">⌕</span></button>
+        <button class="rail-button" title="Extensions"><span class="rail-icon">◇</span></button>
+        <div class="rail-spacer"></div>
+        <button class="rail-button" title="Settings"><span class="rail-icon">⚙</span></button>
+      </aside>
+
+      <aside class="file-sidebar" id="fileSidebar">
+        <div class="sidebar-heading"><span>EXPLORER</span><button class="icon-button" title="More options">···</button></div>
+        <div class="project-tree-heading"><span class="tree-caret">⌄</span><span class="folder-icon">▰</span><strong>UNTITLED PROJECT</strong><button class="icon-button tree-more">＋</button></div>
+        <div class="file-tree">
+          <button class="file-row selected" data-file="index.html"><span class="file-type html">‹›</span><span>index.html</span><span class="file-dot"></span></button>
+          <button class="file-row" data-file="style.css"><span class="file-type css">#</span><span>style.css</span></button>
+          <button class="file-row" data-file="script.js"><span class="file-type js">JS</span><span>script.js</span></button>
+          <div class="tree-divider"></div>
+          <div class="tree-folder"><span class="tree-caret">›</span><span class="folder-icon muted">▰</span><span>assets</span></div>
+          <div class="tree-folder"><span class="tree-caret">›</span><span class="folder-icon muted">▰</span><span>components</span></div>
+        </div>
+        <div class="sidebar-bottom">
+          <div class="sidebar-bottom-title">WORKSPACE</div>
+          <div class="workspace-card"><span class="workspace-card-icon">⌘</span><div><strong>Local workspace</strong><small>3 files · Unsaved project</small></div><span class="status-pulse"></span></div>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <section class="editor-preview-row" id="editorPreviewRow">
+          <section class="editor-pane">
+            <div class="tabbar">
+              <div class="editor-tabs">
+                <button class="editor-tab active" data-file="index.html"><span class="file-type html">‹›</span> index.html <span class="tab-close">×</span></button>
+                <button class="editor-tab" data-file="style.css"><span class="file-type css">#</span> style.css <span class="tab-close">×</span></button>
+                <button class="editor-tab" data-file="script.js"><span class="file-type js">JS</span> script.js <span class="tab-close">×</span></button>
+              </div>
+              <div class="tabbar-tools"><button class="icon-button" title="Split editor">▥</button><button class="icon-button" title="More">···</button></div>
+            </div>
+            <div class="editor-toolbar"><div class="breadcrumbs"><span>src</span><b>/</b><strong id="breadcrumbFile">index.html</strong></div><div class="editor-tools"><span>HTML</span><button class="icon-button">⌗</button><button class="icon-button">···</button></div></div>
+            <div class="code-area" id="codeArea">
+              <div class="line-numbers" id="lineNumbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24</div>
+              <pre class="code-content" id="codeContent"><span class="token-muted">&lt;!DOCTYPE html&gt;</span>
+<span class="token-tag">&lt;html</span> <span class="token-attr">lang</span>=<span class="token-string">"en"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;head&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">charset</span>=<span class="token-string">"UTF-8"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">name</span>=<span class="token-string">"viewport"</span> <span class="token-attr">content</span>=<span class="token-string">"width=device-width, initial-scale=1"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;title&gt;</span>Creative Studio<span class="token-tag">&lt;/title&gt;</span>
+  <span class="token-tag">&lt;link</span> <span class="token-attr">rel</span>=<span class="token-string">"stylesheet"</span> <span class="token-attr">href</span>=<span class="token-string">"style.css"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;/head&gt;</span>
+<span class="token-tag">&lt;body&gt;</span>
+  <span class="token-tag">&lt;main</span> <span class="token-attr">class</span>=<span class="token-string">"hero"</span><span class="token-tag">&gt;</span>
+    <span class="token-tag">&lt;nav</span> <span class="token-attr">class</span>=<span class="token-string">"navigation"</span><span class="token-tag">&gt;</span>
+      <span class="token-tag">&lt;a</span> <span class="token-attr">class</span>=<span class="token-string">"logo"</span><span class="token-tag">&gt;</span>northstar<span class="token-tag">&lt;/a&gt;</span>
+      <span class="token-tag">&lt;div</span> <span class="token-attr">class</span>=<span class="token-string">"nav-links"</span><span class="token-tag">&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Work<span class="token-tag">&lt;/a&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Studio<span class="token-tag">&lt;/a&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Contact<span class="token-tag">&lt;/a&gt;</span>
+      <span class="token-tag">&lt;/div&gt;</span>
+    <span class="token-tag">&lt;/nav&gt;</span>
+    <span class="token-tag">&lt;section</span> <span class="token-attr">class</span>=<span class="token-string">"hero-content"</span><span class="token-tag">&gt;</span>
+      <span class="token-tag">&lt;p&gt;</span>INDEPENDENT CREATIVE STUDIO<span class="token-tag">&lt;/p&gt;</span>
+      <span class="token-tag">&lt;h1&gt;</span>Make room for
+        <span class="token-highlight">what's next.</span><span class="token-tag">&lt;/h1&gt;</span>
+      <span class="token-tag">&lt;button&gt;</span>Explore our work ↗<span class="token-tag">&lt;/button&gt;</span>
+    <span class="token-tag">&lt;/section&gt;</span>
+  <span class="token-tag">&lt;/main&gt;</span>
+<span class="token-tag">&lt;/body&gt;</span>
+<span class="token-tag">&lt;/html&gt;</span></pre>
+            </div>
+            <div class="editor-status"><span><i class="status-dot"></i> Ready</span><span>Ln 18, Col 24</span><span>Spaces: 2</span><span>UTF-8</span><span>LF</span><span>HTML</span></div>
+          </section>
+
+          <div class="resize-handle vertical-handle" aria-hidden="true"><span></span></div>
+
+          <section class="preview-pane">
+            <div class="preview-header">
+              <div class="preview-title"><span class="preview-live-dot"></span><strong>LIVE PREVIEW</strong><span class="live-pill">LIVE</span></div>
+              <div class="preview-actions">
+                <button class="preview-device active" title="Desktop">▰</button><button class="preview-device" title="Tablet">▯</button><button class="preview-device" title="Mobile">▯</button>
+                <span class="action-separator"></span>
+                <button class="icon-button" title="Refresh">↻</button>
+                <button class="icon-button expand-preview" title="Open preview in new window">⛶</button>
+              </div>
+            </div>
+            <div class="preview-address"><span class="lock-icon">⌑</span><span>localhost:3000</span><span class="address-spacer"></span><span class="address-route">/</span><button class="icon-button">↗</button></div>
+            <div class="preview-canvas">
+              <div class="site-preview">
+                <nav class="site-nav"><div class="site-logo"><span class="logo-symbol">✳</span>northstar<span class="logo-period">.</span></div><div class="site-nav-links"><span>Work</span><span>Studio</span><span>Journal</span></div><button class="site-contact">Let's talk <span>↗</span></button></nav>
+                <div class="site-hero">
+                  <div class="hero-eyebrow"><span></span> INDEPENDENT CREATIVE STUDIO <span class="eyebrow-line"></span></div>
+                  <h1>Make room for<br><em>what's next.</em></h1>
+                  <p>We build thoughtful digital experiences<br>for brands moving the world forward.</p>
+                  <button class="hero-cta">Explore our work <span>↗</span></button>
+                  <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-glow"></div>
+                  <div class="hero-index">01 <span>—</span> 04</div>
+                </div>
+                <div class="site-footer"><span>SCROLL TO DISCOVER</span><span>BASED EVERYWHERE · EST. 2024</span><span>© NORTHSTAR STUDIO</span></div>
+              </div>
+            </div>
+            <div class="preview-footer"><span><i class="status-dot"></i> Preview is up to date</span><span>100%</span><span>Desktop · 1440 × 900</span></div>
+          </section>
+        </section>
+
+        <div class="resize-handle horizontal-handle" aria-hidden="true"><span></span></div>
+
+        <section class="bottom-panel" id="bottomPanel">
+          <div class="panel-header">
+            <div class="panel-tabs">
+              <button class="panel-tab active" data-panel="console"><span class="panel-tab-icon">›_</span> Console <span class="panel-count">0</span></button>
+              <button class="panel-tab" data-panel="problems"><span class="panel-tab-icon">△</span> Problems <span class="problem-count">0</span></button>
+              <button class="panel-tab" data-panel="terminal"><span class="panel-tab-icon">⌘</span> Terminal</button>
+              <button class="panel-tab" data-panel="output"><span class="panel-tab-icon">⇥</span> Output</button>
+            </div>
+            <div class="panel-controls"><button class="icon-button" title="Clear panel">⌫</button><button class="icon-button panel-collapse" id="panelCollapse" title="Collapse panel">⌄</button></div>
+          </div>
+          <div class="panel-content" id="panelContent">
+            <div class="console-line"><span class="console-time">10:42:08</span><span class="console-info">i</span><span>Editor workspace initialized.</span></div>
+            <div class="console-line"><span class="console-time">10:42:08</span><span class="console-success">✓</span><span>Interface ready for your next idea.</span></div>
+            <div class="console-cursor"><span></span></div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="app-statusbar"><div class="status-left"><span class="connection-dot"></span><span>Ready</span><span class="status-divider"></span><span>Workspace</span></div><div class="status-right"><span>HTML</span><span>CSS</span><span>JavaScript</span><span class="status-divider"></span><span>Ln 18, Col 24</span><span>UTF-8</span><span class="status-brand">MADE TO CREATE <b>✳</b></span></div></footer>
+  </div>
+  <script data-bundled-from="script.js">
+const fileSamples = {
+  "index.html": {
+    language: "HTML",
+    lines: 24,
+    code: `<span class="token-muted">&lt;!DOCTYPE html&gt;</span>
+<span class="token-tag">&lt;html</span> <span class="token-attr">lang</span>=<span class="token-string">"en"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;head&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">charset</span>=<span class="token-string">"UTF-8"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">name</span>=<span class="token-string">"viewport"</span> <span class="token-attr">content</span>=<span class="token-string">"width=device-width, initial-scale=1"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;title&gt;</span>Creative Studio<span class="token-tag">&lt;/title&gt;</span>
+  <span class="token-tag">&lt;link</span> <span class="token-attr">rel</span>=<span class="token-string">"stylesheet"</span> <span class="token-attr">href</span>=<span class="token-string">"style.css"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;/head&gt;</span>
+<span class="token-tag">&lt;body&gt;</span>
+  <span class="token-tag">&lt;main</span> <span class="token-attr">class</span>=<span class="token-string">"hero"</span><span class="token-tag">&gt;</span>
+    <span class="token-tag">&lt;nav</span> <span class="token-attr">class</span>=<span class="token-string">"navigation"</span><span class="token-tag">&gt;</span>
+      <span class="token-tag">&lt;a</span> <span class="token-attr">class</span>=<span class="token-string">"logo"</span><span class="token-tag">&gt;</span>northstar<span class="token-tag">&lt;/a&gt;</span>
+      <span class="token-tag">&lt;div</span> <span class="token-attr">class</span>=<span class="token-string">"nav-links"</span><span class="token-tag">&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Work<span class="token-tag">&lt;/a&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Studio<span class="token-tag">&lt;/a&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Contact<span class="token-tag">&lt;/a&gt;</span>
+      <span class="token-tag">&lt;/div&gt;</span>
+    <span class="token-tag">&lt;/nav&gt;</span>
+    <span class="token-tag">&lt;section</span> <span class="token-attr">class</span>=<span class="token-string">"hero-content"</span><span class="token-tag">&gt;</span>
+      <span class="token-tag">&lt;p&gt;</span>INDEPENDENT CREATIVE STUDIO<span class="token-tag">&lt;/p&gt;</span>
+      <span class="token-tag">&lt;h1&gt;</span>Make room for
+        <span class="token-highlight">what's next.</span><span class="token-tag">&lt;/h1&gt;</span>
+      <span class="token-tag">&lt;button&gt;</span>Explore our work ↗<span class="token-tag">&lt;/button&gt;</span>
+    <span class="token-tag">&lt;/section&gt;</span>
+  <span class="token-tag">&lt;/main&gt;</span>
+<span class="token-tag">&lt;/body&gt;</span>
+<span class="token-tag">&lt;/html&gt;</span>`
+  },
+  "style.css": {
+    language: "CSS",
+    lines: 18,
+    code: `<span class="token-attr">:root</span> {
+  <span class="token-string">--color-bg</span>: <span style="color:#b9a4ed">#0b1115</span>;
+  <span class="token-string">--color-surface</span>: <span style="color:#b9a4ed">#111b21</span>;
+  <span class="token-string">--color-accent</span>: <span style="color:#b9a4ed">#35e0cf</span>;
+  <span class="token-string">--color-text</span>: <span style="color:#b9a4ed">#e6f0f2</span>;
+}
+
+<span class="token-tag">body</span> {
+  <span class="token-attr">margin</span>: <span class="token-string">0</span>;
+  <span class="token-attr">font-family</span>: <span class="token-string">"Inter", sans-serif</span>;
+  <span class="token-attr">background</span>: <span class="token-string">var(--color-bg)</span>;
+  <span class="token-attr">color</span>: <span class="token-string">var(--color-text)</span>;
+}
+
+<span class="token-attr">.hero</span> {
+  <span class="token-attr">min-height</span>: <span class="token-string">100vh</span>;
+  <span class="token-attr">display</span>: <span class="token-string">grid</span>;
+  <span class="token-attr">place-items</span>: <span class="token-string">center</span>;
+}`
+  },
+  "script.js": {
+    language: "JavaScript",
+    lines: 13,
+    code: `<span class="token-muted">// A little interaction goes a long way.</span>
+<span class="token-tag">const</span> navigation = document
+  .<span class="token-attr">querySelector</span>(<span class="token-string">".navigation"</span>);
+
+<span class="token-tag">const</span> menuItems = document
+  .<span class="token-attr">querySelectorAll</span>(<span class="token-string">".nav-links a"</span>);
+
+menuItems.<span class="token-attr">forEach</span>((item) => {
+  item.<span class="token-attr">addEventListener</span>(<span class="token-string">"click"</span>, () => {
+    menuItems.<span class="token-attr">forEach</span>((link) =>
+      link.<span class="token-attr">classList</span>.<span class="token-attr">remove</span>(<span class="token-string">"active"</span>)
+    );
+    item.<span class="token-attr">classList</span>.<span class="token-attr">add</span>(<span class="token-string">"active"</span>);
+  });
+});`
+  }
+};
+
+const codeContent = document.getElementById("codeContent");
+const lineNumbers = document.getElementById("lineNumbers");
+const breadcrumbFile = document.getElementById("breadcrumbFile");
+const editorTabs = [...document.querySelectorAll(".editor-tab")];
+const fileRows = [...document.querySelectorAll(".file-row")];
+
+function selectFile(file) {
+  const sample = fileSamples[file];
+  if (!sample) return;
+  editorTabs.forEach(tab => tab.classList.toggle("active", tab.dataset.file === file));
+  fileRows.forEach(row => row.classList.toggle("selected", row.dataset.file === file));
+  codeContent.innerHTML = sample.code;
+  lineNumbers.innerHTML = Array.from({length: sample.lines}, (_, i) => i + 1).join("<br>");
+  breadcrumbFile.textContent = file;
+  document.querySelector(".editor-tools > span").textContent = sample.language;
+  document.querySelector(".editor-status span:last-child").textContent = sample.language;
+}
+editorTabs.forEach(tab => tab.addEventListener("click", () => selectFile(tab.dataset.file)));
+fileRows.forEach(row => row.addEventListener("click", () => selectFile(row.dataset.file)));
+
+document.querySelectorAll(".panel-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".panel-tab").forEach(item => item.classList.toggle("active", item === tab));
+    const content = document.getElementById("panelContent");
+    content.dataset.panel = tab.dataset.panel;
+    const messages = {
+      console: [["10:42:08", "i", "console-info", "Editor workspace initialized."], ["10:42:08", "✓", "console-success", "Interface ready for your next idea."]],
+      problems: [["", "✓", "console-success", "No problems have been detected."], ["", "i", "console-info", "Your workspace looks clean."]],
+      terminal: [["", "›", "console-info", "Terminal panel — visual preview only."], ["", "›", "console-info", "No shell session is connected."]],
+      output: [["", "↳", "console-info", "Build output will appear here."]]
+    };
+    content.innerHTML = messages[tab.dataset.panel].map(([time, icon, cls, text]) =>
+      '<div class="console-line"><span class="console-time">' + time + '</span><span class="' + cls + '">' + icon + '</span><span>' + text + '</span></div>'
+    ).join("");
+  });
+});
+
+const bottomPanel = document.getElementById("bottomPanel");
+const panelCollapse = document.getElementById("panelCollapse");
+panelCollapse.addEventListener("click", () => {
+  bottomPanel.classList.toggle("is-collapsed");
+  panelCollapse.textContent = bottomPanel.classList.contains("is-collapsed") ? "⌃" : "⌄";
+});
+
+document.querySelectorAll(".rail-button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".rail-button").forEach(item => item.classList.toggle("active", item === button));
+    if (button.title === "Explorer") document.getElementById("fileSidebar").classList.remove("is-hidden");
+    else if (button.title === "Search" || button.title === "Extensions") document.getElementById("fileSidebar").classList.add("is-hidden");
+  });
+});
+
+document.querySelectorAll(".preview-device").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".preview-device").forEach(item => item.classList.toggle("active", item === button));
+    const canvas = document.querySelector(".preview-canvas");
+    canvas.dataset.viewport = button.title.toLowerCase();
+    canvas.style.maxWidth = button.title === "Mobile" ? "390px" : button.title === "Tablet" ? "768px" : "none";
+    canvas.style.marginLeft = "auto";
+    canvas.style.marginRight = "auto";
+  });
+});
+
+const editorPane = document.querySelector(".editor-pane");
+const previewPane = document.querySelector(".preview-pane");
+document.querySelector(".vertical-handle").addEventListener("pointerdown", event => {
+  event.preventDefault();
+  const row = document.getElementById("editorPreviewRow");
+  const move = moveEvent => {
+    const bounds = row.getBoundingClientRect();
+    const ratio = (moveEvent.clientX - bounds.left) / bounds.width;
+    if (ratio > .25 && ratio < .72) editorPane.style.flexBasis = (ratio * 100) + "%";
+  };
+  const stop = () => {
+    window.removeEventListener("pointermove", move);
+    window.removeEventListener("pointerup", stop);
+  };
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", stop, {once:true});
+});
+
+document.querySelector(".expand-preview").addEventListener("click", () => {
+  const note = document.querySelector(".preview-footer span:first-child");
+  note.innerHTML = '<i class="status-dot"></i> Preview window action is a visual placeholder';
+  window.setTimeout(() => note.innerHTML = '<i class="status-dot"></i> Preview is up to date', 2200);
+});
+
+document.querySelectorAll(".site-nav-links span").forEach(link => {
+  link.addEventListener("click", () => {
+    document.querySelectorAll(".site-nav-links span").forEach(item => item.style.color = item === link ? "#35e0cf" : "#a5b8b4");
+  });
+});
+
+</script>
+</body>
+</html>
