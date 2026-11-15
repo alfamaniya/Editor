@@ -78,43 +78,43 @@ jobs:
           let html = sourceHtml;
           // Google Fonts are optional design enhancements, not required app files.
           // Remove them so the standalone document makes no font-network requests.
-          html = html.replace(/<link\\b(?=[^>]*(?:fonts\\.googleapis\\.com|fonts\\.gstatic\\.com))[^>]*>\\s*/gi, '');
+          html = html.replace(/<link\b(?=[^>]*(?:fonts\.googleapis\.com|fonts\.gstatic\.com))[^>]*>\s*/gi, '');
 
           html = replaceExactlyOnce(
             html,
-            /<link\\b(?=[^>]*\\brel=["']stylesheet["'])(?=[^>]*\\bhref=["'](?:\\.\\/)?style\\.css["'])[^>]*>/i,
-            '<style data-bundled-from="style.css">\\n' + escapeRawText(css, 'style') + '\\n</style>',
+            /<link\b(?=[^>]*\brel=["']stylesheet["'])(?=[^>]*\bhref=["'](?:\.\/)?style\.css["'])[^>]*>/i,
+            '<style data-bundled-from="style.css">\n' + escapeRawText(css, 'style') + '\n</style>',
             'style.css'
           );
 
           html = replaceExactlyOnce(
             html,
-            /<script\\b(?=[^>]*\\bsrc=["'](?:\\.\\/)?script\\.js["'])[^>]*>\\s*<\\/script\\s*>/i,
-            '<script data-bundled-from="script.js">\\n' + escapeRawText(js, 'script') + '\\n</script>',
+            /<script\b(?=[^>]*\bsrc=["'](?:\.\/)?script\.js["'])[^>]*>\s*<\/script\s*>/i,
+            '<script data-bundled-from="script.js">\n' + escapeRawText(js, 'script') + '\n</script>',
             'script.js'
           );
 
-          if (!/<!doctype\\s+html\\s*>/i.test(html) || !/<html\\b/i.test(html) || !/<head\\b/i.test(html) || !/<body\\b/i.test(html) || !/<\\/html\\s*>/i.test(html)) {
+          if (!/<!doctype\s+html\s*>/i.test(html) || !/<html\b/i.test(html) || !/<head\b/i.test(html) || !/<body\b/i.test(html) || !/<\/html\s*>/i.test(html)) {
             throw new Error('Generated document is missing required HTML structure.');
           }
-          if (/<script\\b[^>]*\\bsrc\\s*=/i.test(html)) throw new Error('An external JavaScript file reference remains.');
-          if (/<link\\b[^>]*\\brel=["'][^"']*stylesheet[^"']*["'][^>]*>/i.test(html)) throw new Error('An external stylesheet reference remains.');
-          if (/<(?:script|link|img|iframe|source)\\b[^>]*(?:src|href)=["']https?:/i.test(html)) throw new Error('A network-loaded HTML asset remains in the offline document.');
+          if (/<script\b[^>]*\bsrc\s*=/i.test(html)) throw new Error('An external JavaScript file reference remains.');
+          if (/<link\b[^>]*\brel=["'][^"']*stylesheet[^"']*["'][^>]*>/i.test(html)) throw new Error('An external stylesheet reference remains.');
+          if (/<(?:script|link|img|iframe|source)\b[^>]*(?:src|href)=["']https?:/i.test(html)) throw new Error('A network-loaded HTML asset remains in the offline document.');
 
-          const styleBlocks = [...html.matchAll(/<style\\b[^>]*>([\\s\\S]*?)<\\/style\\s*>/gi)];
-          const scriptBlocks = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script\\s*>/gi)];
-          if (!styleBlocks.some(match => /data-bundled-from=["']style\\.css["']/.test(match[0]))) throw new Error('Bundled stylesheet marker is missing.');
-          if (!scriptBlocks.some(match => /data-bundled-from=["']script\\.js["']/.test(match[0]))) throw new Error('Bundled JavaScript marker is missing.');
+          const styleBlocks = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi)];
+          const scriptBlocks = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
+          if (!styleBlocks.some(match => /data-bundled-from=["']style\.css["']/.test(match[0]))) throw new Error('Bundled stylesheet marker is missing.');
+          if (!scriptBlocks.some(match => /data-bundled-from=["']script\.js["']/.test(match[0]))) throw new Error('Bundled JavaScript marker is missing.');
 
           for (const [, cssText] of styleBlocks) {
-            if (/@import\\s+url?\\s*\\(?\\s*["']?https?:/i.test(cssText) || /url\\(\\s*["']?https?:/i.test(cssText)) {
+            if (/@import\s+url?\s*\(?\s*["']?https?:/i.test(cssText) || /url\(\s*["']?https?:/i.test(cssText)) {
               throw new Error('An external CSS network dependency remains.');
             }
           }
 
-          const inlineJavaScript = scriptBlocks.map(match => match[2]).join('\\n;\\n');
+          const inlineJavaScript = scriptBlocks.map(match => match[2]).join('\n;\n');
           const syntax = spawnSync(process.execPath, ['--check'], { input: inlineJavaScript, encoding: 'utf8' });
-          if (syntax.status !== 0) throw new Error('Bundled JavaScript syntax check failed:\\n' + (syntax.stderr || syntax.stdout));
+          if (syntax.status !== 0) throw new Error('Bundled JavaScript syntax check failed:\n' + (syntax.stderr || syntax.stdout));
 
           await rm(temporary, { force: true });
           await writeFile(temporary, html, 'utf8');
