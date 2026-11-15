@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1115">
+  <title>Editor — Web Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Editor home">
+        <span class="brand-mark"><span></span><span></span><span></span></span>
+        <span class="brand-copy"><strong>editor<span class="brand-dot">.</span></strong><small>WEB PLAYGROUND</small></span>
+      </a>
+      <div class="topbar-divider"></div>
+      <div class="project-label"><span class="folder-glyph">▰</span><span>Untitled Project</span><span class="chevron">⌄</span></div>
+      <div class="top-actions">
+        <button class="tool-button" title="Undo"><span>↶</span></button>
+        <button class="tool-button" title="Redo"><span>↷</span></button>
+        <span class="action-separator"></span>
+        <button class="button button-quiet"><span class="button-icon">＋</span> New</button>
+        <button class="button button-quiet"><span class="button-icon">↥</span> Import</button>
+        <button class="button button-primary"><span class="button-icon">▶</span> Run</button>
+      </div>
+      <div class="topbar-right">
+        <span class="save-state"><i></i> All changes saved</span>
+        <button class="avatar" aria-label="User profile">A</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="activity-rail">
+        <button class="rail-button active" title="Explorer"><span class="rail-icon">▤</span></button>
+        <button class="rail-button" title="Search"><span class="rail-icon">⌕</span></button>
+        <button class="rail-button" title="Extensions"><span class="rail-icon">◇</span></button>
+        <div class="rail-spacer"></div>
+        <button class="rail-button" title="Settings"><span class="rail-icon">⚙</span></button>
+      </aside>
+
+      <aside class="file-sidebar" id="fileSidebar">
+        <div class="sidebar-heading"><span>EXPLORER</span><button class="icon-button" title="More options">···</button></div>
+        <div class="project-tree-heading"><span class="tree-caret">⌄</span><span class="folder-icon">▰</span><strong>UNTITLED PROJECT</strong><button class="icon-button tree-more">＋</button></div>
+        <div class="file-tree">
+          <button class="file-row selected" data-file="index.html"><span class="file-type html">‹›</span><span>index.html</span><span class="file-dot"></span></button>
+          <button class="file-row" data-file="style.css"><span class="file-type css">#</span><span>style.css</span></button>
+          <button class="file-row" data-file="script.js"><span class="file-type js">JS</span><span>script.js</span></button>
+          <div class="tree-divider"></div>
+          <div class="tree-folder"><span class="tree-caret">›</span><span class="folder-icon muted">▰</span><span>assets</span></div>
+          <div class="tree-folder"><span class="tree-caret">›</span><span class="folder-icon muted">▰</span><span>components</span></div>
+        </div>
+        <div class="sidebar-bottom">
+          <div class="sidebar-bottom-title">WORKSPACE</div>
+          <div class="workspace-card"><span class="workspace-card-icon">⌘</span><div><strong>Local workspace</strong><small>3 files · Unsaved project</small></div><span class="status-pulse"></span></div>
+        </div>
+      </aside>
+
+      <main class="main-area">
+        <section class="editor-preview-row" id="editorPreviewRow">
+          <section class="editor-pane">
+            <div class="tabbar">
+              <div class="editor-tabs">
+                <button class="editor-tab active" data-file="index.html"><span class="file-type html">‹›</span> index.html <span class="tab-close">×</span></button>
+                <button class="editor-tab" data-file="style.css"><span class="file-type css">#</span> style.css <span class="tab-close">×</span></button>
+                <button class="editor-tab" data-file="script.js"><span class="file-type js">JS</span> script.js <span class="tab-close">×</span></button>
+              </div>
+              <div class="tabbar-tools"><button class="icon-button" title="Split editor">▥</button><button class="icon-button" title="More">···</button></div>
+            </div>
+            <div class="editor-toolbar"><div class="breadcrumbs"><span>src</span><b>/</b><strong id="breadcrumbFile">index.html</strong></div><div class="editor-tools"><span>HTML</span><button class="icon-button">⌗</button><button class="icon-button">···</button></div></div>
+            <div class="code-area" id="codeArea">
+              <div class="line-numbers" id="lineNumbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15<br>16<br>17<br>18<br>19<br>20<br>21<br>22<br>23<br>24</div>
+              <pre class="code-content" id="codeContent"><span class="token-muted">&lt;!DOCTYPE html&gt;</span>
+<span class="token-tag">&lt;html</span> <span class="token-attr">lang</span>=<span class="token-string">"en"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;head&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">charset</span>=<span class="token-string">"UTF-8"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;meta</span> <span class="token-attr">name</span>=<span class="token-string">"viewport"</span> <span class="token-attr">content</span>=<span class="token-string">"width=device-width, initial-scale=1"</span><span class="token-tag">&gt;</span>
+  <span class="token-tag">&lt;title&gt;</span>Creative Studio<span class="token-tag">&lt;/title&gt;</span>
+  <span class="token-tag">&lt;link</span> <span class="token-attr">rel</span>=<span class="token-string">"stylesheet"</span> <span class="token-attr">href</span>=<span class="token-string">"style.css"</span><span class="token-tag">&gt;</span>
+<span class="token-tag">&lt;/head&gt;</span>
+<span class="token-tag">&lt;body&gt;</span>
+  <span class="token-tag">&lt;main</span> <span class="token-attr">class</span>=<span class="token-string">"hero"</span><span class="token-tag">&gt;</span>
+    <span class="token-tag">&lt;nav</span> <span class="token-attr">class</span>=<span class="token-string">"navigation"</span><span class="token-tag">&gt;</span>
+      <span class="token-tag">&lt;a</span> <span class="token-attr">class</span>=<span class="token-string">"logo"</span><span class="token-tag">&gt;</span>northstar<span class="token-tag">&lt;/a&gt;</span>
+      <span class="token-tag">&lt;div</span> <span class="token-attr">class</span>=<span class="token-string">"nav-links"</span><span class="token-tag">&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Work<span class="token-tag">&lt;/a&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Studio<span class="token-tag">&lt;/a&gt;</span>
+        <span class="token-tag">&lt;a&gt;</span>Contact<span class="token-tag">&lt;/a&gt;</span>
+      <span class="token-tag">&lt;/div&gt;</span>
+    <span class="token-tag">&lt;/nav&gt;</span>
+    <span class="token-tag">&lt;section</span> <span class="token-attr">class</span>=<span class="token-string">"hero-content"</span><span class="token-tag">&gt;</span>
+      <span class="token-tag">&lt;p&gt;</span>INDEPENDENT CREATIVE STUDIO<span class="token-tag">&lt;/p&gt;</span>
+      <span class="token-tag">&lt;h1&gt;</span>Make room for
+        <span class="token-highlight">what's next.</span><span class="token-tag">&lt;/h1&gt;</span>
+      <span class="token-tag">&lt;button&gt;</span>Explore our work ↗<span class="token-tag">&lt;/button&gt;</span>
+    <span class="token-tag">&lt;/section&gt;</span>
+  <span class="token-tag">&lt;/main&gt;</span>
+<span class="token-tag">&lt;/body&gt;</span>
+<span class="token-tag">&lt;/html&gt;</span></pre>
+            </div>
+            <div class="editor-status"><span><i class="status-dot"></i> Ready</span><span>Ln 18, Col 24</span><span>Spaces: 2</span><span>UTF-8</span><span>LF</span><span>HTML</span></div>
+          </section>
+
+          <div class="resize-handle vertical-handle" aria-hidden="true"><span></span></div>
+
+          <section class="preview-pane">
+            <div class="preview-header">
+              <div class="preview-title"><span class="preview-live-dot"></span><strong>LIVE PREVIEW</strong><span class="live-pill">LIVE</span></div>
+              <div class="preview-actions">
+                <button class="preview-device active" title="Desktop">▰</button><button class="preview-device" title="Tablet">▯</button><button class="preview-device" title="Mobile">▯</button>
+                <span class="action-separator"></span>
+                <button class="icon-button" title="Refresh">↻</button>
+                <button class="icon-button expand-preview" title="Open preview in new window">⛶</button>
+              </div>
+            </div>
+            <div class="preview-address"><span class="lock-icon">⌑</span><span>localhost:3000</span><span class="address-spacer"></span><span class="address-route">/</span><button class="icon-button">↗</button></div>
+            <div class="preview-canvas">
+              <div class="site-preview">
+                <nav class="site-nav"><div class="site-logo"><span class="logo-symbol">✳</span>northstar<span class="logo-period">.</span></div><div class="site-nav-links"><span>Work</span><span>Studio</span><span>Journal</span></div><button class="site-contact">Let's talk <span>↗</span></button></nav>
+                <div class="site-hero">
+                  <div class="hero-eyebrow"><span></span> INDEPENDENT CREATIVE STUDIO <span class="eyebrow-line"></span></div>
+                  <h1>Make room for<br><em>what's next.</em></h1>
+                  <p>We build thoughtful digital experiences<br>for brands moving the world forward.</p>
+                  <button class="hero-cta">Explore our work <span>↗</span></button>
+                  <div class="hero-orbit orbit-one"></div><div class="hero-orbit orbit-two"></div><div class="hero-glow"></div>
+                  <div class="hero-index">01 <span>—</span> 04</div>
+                </div>
+                <div class="site-footer"><span>SCROLL TO DISCOVER</span><span>BASED EVERYWHERE · EST. 2024</span><span>© NORTHSTAR STUDIO</span></div>
+              </div>
+            </div>
+            <div class="preview-footer"><span><i class="status-dot"></i> Preview is up to date</span><span>100%</span><span>Desktop · 1440 × 900</span></div>
+          </section>
+        </section>
+
+        <div class="resize-handle horizontal-handle" aria-hidden="true"><span></span></div>
+
+        <section class="bottom-panel" id="bottomPanel">
+          <div class="panel-header">
+            <div class="panel-tabs">
+              <button class="panel-tab active" data-panel="console"><span class="panel-tab-icon">›_</span> Console <span class="panel-count">0</span></button>
+              <button class="panel-tab" data-panel="problems"><span class="panel-tab-icon">△</span> Problems <span class="problem-count">0</span></button>
+              <button class="panel-tab" data-panel="terminal"><span class="panel-tab-icon">⌘</span> Terminal</button>
+              <button class="panel-tab" data-panel="output"><span class="panel-tab-icon">⇥</span> Output</button>
+            </div>
+            <div class="panel-controls"><button class="icon-button" title="Clear panel">⌫</button><button class="icon-button panel-collapse" id="panelCollapse" title="Collapse panel">⌄</button></div>
+          </div>
+          <div class="panel-content" id="panelContent">
+            <div class="console-line"><span class="console-time">10:42:08</span><span class="console-info">i</span><span>Editor workspace initialized.</span></div>
+            <div class="console-line"><span class="console-time">10:42:08</span><span class="console-success">✓</span><span>Interface ready for your next idea.</span></div>
+            <div class="console-cursor"><span></span></div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer class="app-statusbar"><div class="status-left"><span class="connection-dot"></span><span>Ready</span><span class="status-divider"></span><span>Workspace</span></div><div class="status-right"><span>HTML</span><span>CSS</span><span>JavaScript</span><span class="status-divider"></span><span>Ln 18, Col 24</span><span>UTF-8</span><span class="status-brand">MADE TO CREATE <b>✳</b></span></div></footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
