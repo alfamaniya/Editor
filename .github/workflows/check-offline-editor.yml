@@ -41,7 +41,7 @@ jobs:
           test -s offline-editor.html
 
           node --input-type=module <<'NODE'
-          import { readFileSync, writeFileSync } from 'node:fs';
+          import { readFileSync } from 'node:fs';
           import { spawnSync } from 'node:child_process';
 
           const file = 'offline-editor.html';
@@ -49,46 +49,46 @@ jobs:
           const errors = [];
 
           const required = [
-            ['HTML doctype', /<!doctype\\s+html\\s*>/i],
-            ['opening html element', /<html\\b/i],
-            ['head element', /<head\\b/i],
-            ['body element', /<body\\b/i],
-            ['closing body element', /<\\/body\\s*>/i],
-            ['closing html element', /<\\/html\\s*>/i],
+            ['HTML doctype', /<!doctype\s+html\s*>/i],
+            ['opening html element', /<html\b/i],
+            ['head element', /<head\b/i],
+            ['body element', /<body\b/i],
+            ['closing body element', /<\/body\s*>/i],
+            ['closing html element', /<\/html\s*>/i],
           ];
 
           for (const [label, pattern] of required) {
             if (!pattern.test(html)) errors.push(`Missing required document structure: ${label}`);
           }
 
-          const styles = [...html.matchAll(/<style\\b[^>]*>([\\s\\S]*?)<\\/style\\s*>/gi)];
-          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script\\s*>/gi)];
+          const styles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi)];
+          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
 
           if (styles.length === 0) errors.push('No inline <style> block was found.');
           if (scripts.length === 0) errors.push('No inline <script> block was found.');
 
-          if (/<script\\b[^>]*\\bsrc\\s*=/i.test(html)) {
+          if (/<script\b[^>]*\bsrc\s*=/i.test(html)) {
             errors.push('External JavaScript files are not allowed in the offline editor.');
           }
-          if (/<link\\b[^>]*\\brel\\s*=\\s*["'][^"']*stylesheet[^"']*["'][^>]*\\bhref\\s*=/i.test(html)) {
+          if (/<link\b[^>]*\brel\s*=\s*["'][^"']*stylesheet[^"']*["'][^>]*\bhref\s*=/i.test(html)) {
             errors.push('External stylesheet files are not allowed in the offline editor.');
           }
 
           for (const match of styles) {
-            if (/@import\\s+url?\\s*\\(?\\s*["']?https?:/i.test(match[1]) ||
-                /url\\(\\s*["']?https?:/i.test(match[1])) {
+            if (/@import\s+url?\s*\(?\s*["']?https?:/i.test(match[1]) ||
+                /url\(\s*["']?https?:/i.test(match[1])) {
               errors.push('The inline CSS contains an external network dependency.');
             }
           }
 
-          const inlineJavaScript = scripts.map((match) => match[2]).join('\\n;\\n');
+          const inlineJavaScript = scripts.map((match) => match[2]).join('\n;\n');
           if (inlineJavaScript.trim()) {
             const check = spawnSync(process.execPath, ['--check'], {
               input: inlineJavaScript,
               encoding: 'utf8',
             });
             if (check.status !== 0) {
-              errors.push('Inline JavaScript syntax check failed:\\n' + (check.stderr || check.stdout).trim());
+              errors.push('Inline JavaScript syntax check failed:\n' + (check.stderr || check.stdout).trim());
             }
           }
 
