@@ -1,104 +1,152 @@
-name: Check standalone offline editor
+name: Build standalone offline editor
 
 on:
   push:
     branches: [main]
     paths:
-      - "offline-editor.html"
+      - "index.html"
+      - "style.css"
+      - "script.js"
       - ".github/workflows/check-offline-editor.yml"
   pull_request:
     branches: [main]
     paths:
-      - "offline-editor.html"
+      - "index.html"
+      - "style.css"
+      - "script.js"
       - ".github/workflows/check-offline-editor.yml"
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: check-offline-editor-${{ github.ref }}
+  group: build-offline-editor-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  check-offline-editor:
-    name: Validate the single-file offline editor
+  build:
+    name: Build and verify offline-editor.html
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Verify standalone HTML and offline requirements
+      - name: Bundle all local app files into one HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --input-type=module <<'NODE'
+          import { readFile, writeFile, rename, rm } from 'node:fs/promises';
+          import { resolve } from 'node:path';
+          import { spawnSync } from 'node:child_process';
+
+          const root = process.cwd();
+          const output = resolve(root, 'offline-editor.html');
+          const temporary = output + '.tmp';
+          const htmlPath = resolve(root, 'index.html');
+          const cssPath = resolve(root, 'style.css');
+          const jsPath = resolve(root, 'script.js');
+
+          const [sourceHtml, css, js] = await Promise.all([
+            readFile(htmlPath, 'utf8'),
+            readFile(cssPath, 'utf8'),
+            readFile(jsPath, 'utf8'),
+          ]);
+
+          function replaceExactlyOnce(source, pattern, replacement, label) {
+            const matches = source.match(new RegExp(pattern.source, pattern.flags.includes('g') ? pattern.flags : pattern.flags + 'g')) || [];
+            if (matches.length !== 1) {
+              throw new Error(label + ': expected exactly one reference, found ' + matches.length);
+            }
+            return source.replace(pattern, replacement);
+          }
+
+          function escapeRawText(content, tagName) {
+            const pattern = new RegExp('</' + tagName, 'gi');
+            return content.replace(pattern, match => '<\\/' + match.slice(1));
+          }
+
+          let html = sourceHtml;
+          // Google Fonts are optional design enhancements, not required app files.
+          // Remove them so the standalone document makes no font-network requests.
+          html = html.replace(/<link\\b(?=[^>]*(?:fonts\\.googleapis\\.com|fonts\\.gstatic\\.com))[^>]*>\\s*/gi, '');
+
+          html = replaceExactlyOnce(
+            html,
+            /<link\\b(?=[^>]*\\brel=["']stylesheet["'])(?=[^>]*\\bhref=["'](?:\\.\\/)?style\\.css["'])[^>]*>/i,
+            '<style data-bundled-from="style.css">\\n' + escapeRawText(css, 'style') + '\\n</style>',
+            'style.css'
+          );
+
+          html = replaceExactlyOnce(
+            html,
+            /<script\\b(?=[^>]*\\bsrc=["'](?:\\.\\/)?script\\.js["'])[^>]*>\\s*<\\/script\\s*>/i,
+            '<script data-bundled-from="script.js">\\n' + escapeRawText(js, 'script') + '\\n</script>',
+            'script.js'
+          );
+
+          if (!/<!doctype\\s+html\\s*>/i.test(html) || !/<html\\b/i.test(html) || !/<head\\b/i.test(html) || !/<body\\b/i.test(html) || !/<\\/html\\s*>/i.test(html)) {
+            throw new Error('Generated document is missing required HTML structure.');
+          }
+          if (/<script\\b[^>]*\\bsrc\\s*=/i.test(html)) throw new Error('An external JavaScript file reference remains.');
+          if (/<link\\b[^>]*\\brel=["'][^"']*stylesheet[^"']*["'][^>]*>/i.test(html)) throw new Error('An external stylesheet reference remains.');
+          if (/<(?:script|link|img|iframe|source)\\b[^>]*(?:src|href)=["']https?:/i.test(html)) throw new Error('A network-loaded HTML asset remains in the offline document.');
+
+          const styleBlocks = [...html.matchAll(/<style\\b[^>]*>([\\s\\S]*?)<\\/style\\s*>/gi)];
+          const scriptBlocks = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script\\s*>/gi)];
+          if (!styleBlocks.some(match => /data-bundled-from=["']style\\.css["']/.test(match[0]))) throw new Error('Bundled stylesheet marker is missing.');
+          if (!scriptBlocks.some(match => /data-bundled-from=["']script\\.js["']/.test(match[0]))) throw new Error('Bundled JavaScript marker is missing.');
+
+          for (const [, cssText] of styleBlocks) {
+            if (/@import\\s+url?\\s*\\(?\\s*["']?https?:/i.test(cssText) || /url\\(\\s*["']?https?:/i.test(cssText)) {
+              throw new Error('An external CSS network dependency remains.');
+            }
+          }
+
+          const inlineJavaScript = scriptBlocks.map(match => match[2]).join('\\n;\\n');
+          const syntax = spawnSync(process.execPath, ['--check'], { input: inlineJavaScript, encoding: 'utf8' });
+          if (syntax.status !== 0) throw new Error('Bundled JavaScript syntax check failed:\\n' + (syntax.stderr || syntax.stdout));
+
+          await rm(temporary, { force: true });
+          await writeFile(temporary, html, 'utf8');
+          await rename(temporary, output);
+          console.log('Built offline-editor.html (' + Buffer.byteLength(html, 'utf8') + ' bytes).');
+          console.log('Embedded local files: index.html, style.css, script.js.');
+          console.log('Google Fonts network links removed; bundled JavaScript syntax is valid.');
+          NODE
+
+      - name: Verify the generated offline file
         shell: bash
         run: |
           set -euo pipefail
           test -s offline-editor.html
+          ! grep -Eiq '<script[^>]+src=|<link[^>]+stylesheet[^>]+href=' offline-editor.html
+          grep -q 'data-bundled-from="style.css"' offline-editor.html
+          grep -q 'data-bundled-from="script.js"' offline-editor.html
+          echo "Offline bundle verification passed."
 
-          node --input-type=module <<'NODE'
-          import { readFileSync } from 'node:fs';
-          import { spawnSync } from 'node:child_process';
-
-          const file = 'offline-editor.html';
-          const html = readFileSync(file, 'utf8');
-          const errors = [];
-
-          const required = [
-            ['HTML doctype', /<!doctype\s+html\s*>/i],
-            ['opening html element', /<html\b/i],
-            ['head element', /<head\b/i],
-            ['body element', /<body\b/i],
-            ['closing body element', /<\/body\s*>/i],
-            ['closing html element', /<\/html\s*>/i],
-          ];
-
-          for (const [label, pattern] of required) {
-            if (!pattern.test(html)) errors.push(`Missing required document structure: ${label}`);
-          }
-
-          const styles = [...html.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style\s*>/gi)];
-          const scripts = [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi)];
-
-          if (styles.length === 0) errors.push('No inline <style> block was found.');
-          if (scripts.length === 0) errors.push('No inline <script> block was found.');
-
-          if (/<script\b[^>]*\bsrc\s*=/i.test(html)) {
-            errors.push('External JavaScript files are not allowed in the offline editor.');
-          }
-          if (/<link\b[^>]*\brel\s*=\s*["'][^"']*stylesheet[^"']*["'][^>]*\bhref\s*=/i.test(html)) {
-            errors.push('External stylesheet files are not allowed in the offline editor.');
-          }
-
-          for (const match of styles) {
-            if (/@import\s+url?\s*\(?\s*["']?https?:/i.test(match[1]) ||
-                /url\(\s*["']?https?:/i.test(match[1])) {
-              errors.push('The inline CSS contains an external network dependency.');
-            }
-          }
-
-          const inlineJavaScript = scripts.map((match) => match[2]).join('\n;\n');
-          if (inlineJavaScript.trim()) {
-            const check = spawnSync(process.execPath, ['--check'], {
-              input: inlineJavaScript,
-              encoding: 'utf8',
-            });
-            if (check.status !== 0) {
-              errors.push('Inline JavaScript syntax check failed:\n' + (check.stderr || check.stdout).trim());
-            }
-          }
-
-          if (errors.length) {
-            console.error('Standalone offline editor check failed:');
-            for (const error of errors) console.error('- ' + error);
-            process.exit(1);
-          }
-
-          console.log('Standalone offline editor check passed.');
-          console.log(`Inline style blocks: ${styles.length}; inline script blocks: ${scripts.length}.`);
-          console.log('Required HTML structure is present and no external JS/CSS dependency was detected.');
-          NODE
+      - name: Commit generated file to main
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- offline-editor.html; then
+            echo "offline-editor.html is already up to date."
+            exit 0
+          fi
+          git add offline-editor.html
+          git commit -m "build: regenerate standalone offline editor"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
