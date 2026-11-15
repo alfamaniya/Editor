@@ -1,0 +1,104 @@
+name: Check standalone offline editor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "offline-editor.html"
+      - ".github/workflows/check-offline-editor.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "offline-editor.html"
+      - ".github/workflows/check-offline-editor.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-offline-editor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-offline-editor:
+    name: Validate the single-file offline editor
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Verify standalone HTML and offline requirements
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s offline-editor.html
+
+          node --input-type=module <<'NODE'
+          import { readFileSync, writeFileSync } from 'node:fs';
+          import { spawnSync } from 'node:child_process';
+
+          const file = 'offline-editor.html';
+          const html = readFileSync(file, 'utf8');
+          const errors = [];
+
+          const required = [
+            ['HTML doctype', /<!doctype\\s+html\\s*>/i],
+            ['opening html element', /<html\\b/i],
+            ['head element', /<head\\b/i],
+            ['body element', /<body\\b/i],
+            ['closing body element', /<\\/body\\s*>/i],
+            ['closing html element', /<\\/html\\s*>/i],
+          ];
+
+          for (const [label, pattern] of required) {
+            if (!pattern.test(html)) errors.push(`Missing required document structure: ${label}`);
+          }
+
+          const styles = [...html.matchAll(/<style\\b[^>]*>([\\s\\S]*?)<\\/style\\s*>/gi)];
+          const scripts = [...html.matchAll(/<script\\b([^>]*)>([\\s\\S]*?)<\\/script\\s*>/gi)];
+
+          if (styles.length === 0) errors.push('No inline <style> block was found.');
+          if (scripts.length === 0) errors.push('No inline <script> block was found.');
+
+          if (/<script\\b[^>]*\\bsrc\\s*=/i.test(html)) {
+            errors.push('External JavaScript files are not allowed in the offline editor.');
+          }
+          if (/<link\\b[^>]*\\brel\\s*=\\s*["'][^"']*stylesheet[^"']*["'][^>]*\\bhref\\s*=/i.test(html)) {
+            errors.push('External stylesheet files are not allowed in the offline editor.');
+          }
+
+          for (const match of styles) {
+            if (/@import\\s+url?\\s*\\(?\\s*["']?https?:/i.test(match[1]) ||
+                /url\\(\\s*["']?https?:/i.test(match[1])) {
+              errors.push('The inline CSS contains an external network dependency.');
+            }
+          }
+
+          const inlineJavaScript = scripts.map((match) => match[2]).join('\\n;\\n');
+          if (inlineJavaScript.trim()) {
+            const check = spawnSync(process.execPath, ['--check'], {
+              input: inlineJavaScript,
+              encoding: 'utf8',
+            });
+            if (check.status !== 0) {
+              errors.push('Inline JavaScript syntax check failed:\\n' + (check.stderr || check.stdout).trim());
+            }
+          }
+
+          if (errors.length) {
+            console.error('Standalone offline editor check failed:');
+            for (const error of errors) console.error('- ' + error);
+            process.exit(1);
+          }
+
+          console.log('Standalone offline editor check passed.');
+          console.log(`Inline style blocks: ${styles.length}; inline script blocks: ${scripts.length}.`);
+          console.log('Required HTML structure is present and no external JS/CSS dependency was detected.');
+          NODE
