@@ -95,7 +95,7 @@ document.getElementById("sidebarTool").onclick=()=>document.getElementById("side
 function dragResize(handle,move){handle.addEventListener("pointerdown",e=>{e.preventDefault();handle.setPointerCapture?.(e.pointerId);const onMove=ev=>move(ev);const stop=()=>{window.removeEventListener("pointermove",onMove);window.removeEventListener("pointerup",stop);};window.addEventListener("pointermove",onMove);window.addEventListener("pointerup",stop,{once:true});});}
 dragResize(document.getElementById("bottomGutter"),ev=>{let main=document.querySelector(".main"),r=main.getBoundingClientRect(),h=r.bottom-ev.clientY;if(h>=38&&h<=Math.min(320,r.height*.65)){document.getElementById("bottom").style.height=h+"px";document.getElementById("bottom").classList.remove("collapsed");}});
 dragResize(document.getElementById("sideGutter"),ev=>{let w=ev.clientX-document.querySelector(".rail").getBoundingClientRect().right;if(w>=130&&w<=340)document.getElementById("sidebar").style.width=w+"px";});
-\ndocument.getElementById("saveState").title="Visual status indicator only — no project data is saved.";
+
 })();
 </script>
 </body></html>
